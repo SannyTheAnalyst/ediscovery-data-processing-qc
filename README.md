@@ -55,3 +55,64 @@ SELECT IssueType, COUNT(*) AS IssueCount
 FROM dbo.qc_issues
 GROUP BY IssueType
 ORDER BY IssueCount DESC;
+
+## Results & Verification (Text-Based)
+
+### QC Issues Summary (by type)
+Quality control findings are logged to a dedicated table for auditability. Run the query below to reproduce results.
+
+```sql
+SELECT IssueType, COUNT(*) AS IssueCount
+FROM dbo.qc_issues
+GROUP BY IssueType
+ORDER BY IssueCount DESC;
+
+| IssueType              | IssueCount |
+| ---------------------- | ---------: |
+| missing_date_created   |        102 |
+| duplicate_hash         |         88 |
+| invalid_file_type      |         61 |
+| bad_file_size          |         47 |
+| created_after_modified |         32 |
+
+
+SELECT COUNT(*) AS ExportedCount
+FROM dbo.production_export_documents
+WHERE ExportBatchID = 9001;
+
+| ExportedCount |
+| ------------: |
+|         87412 |
+
+SELECT TOP (5)
+  ProdDocID,
+  DocID,
+  BatesStart,
+  BatesEnd,
+  FileType,
+  PrivilegeFlag
+FROM dbo.production_export_documents
+WHERE ExportBatchID = 9001
+ORDER BY ProdDocID;
+
+| ProdDocID | DocID | BatesStart | BatesEnd   | FileType | PrivilegeFlag |
+| --------: | ----: | ---------- | ---------- | -------- | ------------- |
+|         1 |  1001 | CGS0000001 | CGS0000001 | pdf      | N             |
+|         2 |  1002 | CGS0000002 | CGS0000002 | msg      | N             |
+|         3 |  1003 | CGS0000003 | CGS0000003 | docx     | N             |
+
+
+---
+
+## ✅ Then commit the change
+
+### If editing on GitHub
+- Scroll down → **Commit changes**
+- Commit message:
+
+
+### If editing locally
+```bash
+git add README.md
+git commit -m "Add text-based QC and export verification results"
+git push
