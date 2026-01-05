@@ -4,7 +4,7 @@
 This project simulates an eDiscovery Data Specialist workflow aligned to LAW/Relativity-style operations: large-volume data loads, load file validation, quality control (QC), and production-ready exports. The focus is on accuracy, repeatability, and documentation—key requirements in government and regulated environments.
 
 ## Objectives
-- Load large volumes of “document metadata” into SQL Server (SSMS)
+- Load large volumes of document metadata into SQL Server (SSMS)
 - Run repeatable QC checks to validate load and export readiness
 - Log data inconsistencies and exceptions for remediation
 - Generate a production export excluding privileged documents
@@ -45,15 +45,13 @@ Run scripts in order:
 4. `sql/04_log_qc_issues.sql`
 5. `sql/05_production_export.sql`
 
-## Notes on Tool Equivalence
-This simulation uses SQL Server to replicate core functions performed in tools like LAW/Relativity (loading, QC, validation, and export verification). The emphasis is on consistent processing logic and documented QC procedures.
+## Results & Verification (No Screenshots Required)
 
-## Sample Results (Add screenshots)
-Add screenshots here after running:
-- Batch record counts
-- QC issue summary by type
-- Production export counts and sample rows
+### QC Issues Summary (by type)
+QC findings are logged to `dbo.qc_issues` for auditability. Run:
 
-## Author
-Sanny Danfawada — Dallas, TX  
-GitHub: https://github.com/MohSan083
+```sql
+SELECT IssueType, COUNT(*) AS IssueCount
+FROM dbo.qc_issues
+GROUP BY IssueType
+ORDER BY IssueCount DESC;
